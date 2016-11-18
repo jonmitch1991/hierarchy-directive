@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+    <div class="panel-heading" ng-if="!max || selections.length < max">
+        <h4 class="action-button" data-ng-repeat='child in options'>
+            <label class="label label-primary fadein" data-ng-click='memberClicked(child.name)'>{{ child.name }}</label>
+        </h4>
+    </div>
+
+    <div class="panel-body" ng-if="!max || selections.length < max">
+        <div class="action-cancel" data-ng-repeat='member in currentSelection'>
+            <label class="label label-default fadein" data-ng-click="removeCurrentSelection($index)">{{ member }} <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></label>
+        </div>
+    </div>
+
+    <table class="table">
+        <tr data-ng-repeat='selection in selections'>
+            <td><span data-ng-repeat='member in selection'> {{ member }} <span class="glyphicon glyphicon-menu-right" aria-hidden="true" data-ng-if="$index != (selection.length - 1)"></span></span></td>
+            <td><button class="btn btn-sm btn-danger" data-ng-click="removeSelection($index)">Remove</button></td>
+        </tr>
+    </table>
+</div>
