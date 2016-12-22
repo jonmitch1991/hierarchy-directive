@@ -41,7 +41,26 @@ This will print the JSON object to represent the data in the spreadsheet.
 
 This script is based on a hierarchy that goes 3 levels deep (i.e. the spreadsheet has 3 columns). There is also an example of nodes which only go 2 levels deep, here the 1st and 2nd level are the same and this is handled within the script. The script can easily be adapted to handle this differently or to go any number of levels deeper.
 
+### Lazy Loading
+A `lazy-loading` folder has been added to the repository to allow for the hierarchy to be lazily loaded rather than having a full pre-loaded JSON object. Installation of this works in the same was as already described, replacing `hierarchy.html` with `hierarchy-lazy.html` and `hierarchy.js` with `hierarchy-lazy.js`.
+
+Once these files have been added to the project, then add a hierarchy to a page using:
+```
+<hierarchy-lazy options="tree" selections="selections" max="3"></hierarchy-lazy>
+```
+*NOTE: The initial top level `options` should be populated in the pages controller and added to the scope of the directive*
+
+In `hierarchy-lazy.js` there is currently an arbitrary `service` being passed into the directive with a method `findChildren(..)`. This would need updating to whatever service and method is being used.
+
+This service is expected to return a list of elements with the following structure:
+```
+{id: id, title: title}
+```
+The recommended data model would be a table where each entry has an `id`, `parent_id` and `title`. Then the `findChildren(..)` method (or equivalent) would take an `id` and execute the following query:
+```
+select * from table where parent_id = :id
+```
+`hierarchy_lazy_sql_inserts.py` has been added to the `lazy-loading` folder also which can be used to generate SQL Insert statements for the data model described. Here the `table` name would just need updating. As with `hierarchy_json_create.py`, this script is for a hierarchy that goes 3 levels deep, but could be adapted.
+
 ### Customisation
 This directive can easily be altered and customised once added to a project. For example, styling could be changed by applying different CSS classes to elements in `hierarchy.html`.
-
-Another change could be to add lazy loading rather than having the full hierarchy structure loaded from the start. To do this `options` would need to be set to the top level elements initially and then in the `memberClicked` function `options` should be set through a service call. The logic would need adjusting slightly, for example `initialHierarchy` would no longer be needed, instead the top level elements would be found through another service call. 
